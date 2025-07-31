@@ -162,14 +162,20 @@ min_confidence = 0.5 # Ubah nilai confidence (0-1)
 
 ## 📜 Lisensi
 
+<div align="justify">
+
 **Lisensi MIT** ![License](https://img.shields.io/badge/License-MIT-green)
 
-Hak Cipta (c) 2025 [MUHAMMAD FADILAH]
-<div align="justify">
+**Hak Cipta (c) 2025 Muhammad Fadilah**
+
 Dengan ini diberikan izin, secara gratis, kepada siapa pun yang memperoleh salinan perangkat lunak ini dan file dokumentasi terkait ("Perangkat Lunak"), untuk menggunakan Perangkat Lunak tanpa batasan, termasuk tanpa batasan hak untuk menggunakan, menyalin, memodifikasi, menggabungkan, memublikasikan, mendistribusikan, memberikan sublisensi, dan/atau menjual salinan Perangkat Lunak, dan mengizinkan orang yang menerima Perangkat Lunak untuk melakukannya, dengan syarat-syarat berikut:
-<br>
+
 Pemberitahuan hak cipta di atas dan pemberitahuan izin ini harus disertakan dalam semua salinan atau bagian substansial dari Perangkat Lunak.
-<br>
-PERANGKAT LUNAK INI DISEDIAKAN "SEBAGAIMANA ADANYA", TANPA JAMINAN APA PUN, BAIK TERSURAT MAUPUN TERSIRAT, TERMASUK TAPI TIDAK TERBATAS PADA JAMINAN KELAYAKAN JUAL, KESESUAIAN UNTUK TUJUAN TERTENTU DAN TIDAK MELANGGAR HAK ORANG LAIN. DALAM KEADAAN APA PUN, PENULIS ATAU PEMEGANG HAK CIPTA TIDAK BERTANGGUNG JAWAB ATAS KLAIM, KERUSAKAN, ATAU TANGGUNG JAWAB LAINNYA, BAIK DALAM PERKARA KONTRAK, KELALAIAN, ATAU LAINNYA, YANG TIMBUL DARI, DI LUAR, ATAU TERKAIT DENGAN PERANGKAT LUNAK ATAU PENGGUNAANNYA.
+
+**PERANGKAT LUNAK INI DISEDIAKAN "SEBAGAIMANA ADANYA", TANPA JAMINAN APA PUN, BAIK TERSURAT MAUPUN TERSIRAT, TERMASUK TAPI TIDAK TERBATAS PADA JAMINAN KELAYAKAN JUAL, KESESUAIAN UNTUK TUJUAN TERTENTU DAN TIDAK MELANGGAR HAK ORANG LAIN. DALAM KEADAAN APA PUN, PENULIS ATAU PEMEGANG HAK CIPTA TIDAK BERTANGGUNG JAWAB ATAS KLAIM, KERUSAKAN, ATAU TANGGUNG JAWAB LAINNYA, BAIK DALAM PERKARA KONTRAK, KELALAIAN, ATAU LAINNYA, YANG TIMBUL DARI, DI LUAR, ATAU TERKAIT DENGAN PERANGKAT LUNAK ATAU PENGGUNAANNYA.**
+
 </div>
-Dikembangkan dengan ❤️ oleh Muhammad Fadilah | [Portofolio Saya](https://muhammad-fadilah-portofolio.netlify.app/)
+
+<div align="right">
+Dikembangkan dengan ❤️ oleh <a href="https://muhammad-fadilah-portofolio.netlify.app/">Muhammad Fadilah</a>
+</div>
