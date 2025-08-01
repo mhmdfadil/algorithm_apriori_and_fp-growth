@@ -5,14 +5,14 @@ from itertools import combinations  # For generating combinations of items
 from collections import defaultdict  # For efficient dictionary operations
 import os  # For operating system dependent functionality
 
-def apriori_algorithm(one_hot_file, min_support=0.2, min_confidence=0.5):
+def apriori_algorithm(one_hot_file, min_support=0.3, min_confidence=0.6):
     """
     Implement the Apriori algorithm for association rule mining
     
     Args:
         one_hot_file (str): Path to the one-hot encoded Excel file
-        min_support (float): Minimum support threshold (default: 0.2)
-        min_confidence (float): Minimum confidence threshold (default: 0.5)
+        min_support (float): Minimum support threshold (default: 0.3)
+        min_confidence (float): Minimum confidence threshold (default: 0.6)
     
     Returns:
         dict: Dictionary containing frequent itemsets, association rules and metrics
@@ -271,8 +271,8 @@ if __name__ == "__main__":
     # Set input/output parameters
     input_file = 'data_temp/tahap3_one_hot_transaksi.xlsx'
     output_file = 'data_temp/tahap4_hasil_perhitungan.xlsx'
-    min_support = 0.2  # Minimum support threshold (20%)
-    min_confidence = 0.5  # Minimum confidence threshold (50%)
+    min_support = 0.3  # Minimum support threshold (30%)
+    min_confidence = 0.6  # Minimum confidence threshold (60%)
     
     # Run Apriori algorithm
     print("Memulai perhitungan Apriori...")

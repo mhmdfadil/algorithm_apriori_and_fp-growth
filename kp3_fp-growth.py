@@ -79,14 +79,14 @@ def visualize_fp_tree(root, header_table, item_initials, output_path):
     
     return output_path
 
-def fp_growth_algorithm(one_hot_file, min_support=0.2, min_confidence=0.5, output_dir='output'):
+def fp_growth_algorithm(one_hot_file, min_support=0.3, min_confidence=0.6, output_dir='output'):
     """
     Implement FP-Growth algorithm for association rule mining
     
     Args:
         one_hot_file (str): Path to one-hot encoded Excel file
-        min_support (float): Minimum support threshold (default: 0.2)
-        min_confidence (float): Minimum confidence threshold (default: 0.5)
+        min_support (float): Minimum support threshold (default: 0.3)
+        min_confidence (float): Minimum confidence threshold (default: 0.6)
         output_dir (str): Directory to save output files (default: 'output')
     
     Returns:
@@ -501,8 +501,8 @@ if __name__ == "__main__":
     input_file = 'data_temp/tahap3_one_hot_transaksi.xlsx'
     output_file = 'data_temp/tahap5_hasil_perhitungan.xlsx'
     output_dir = 'data_temp/fp_growth_output'
-    min_support = 0.2  # Minimum support threshold (20%)
-    min_confidence = 0.5  # Minimum confidence threshold (50%)
+    min_support = 0.3  # Minimum support threshold (30%)
+    min_confidence = 0.6  # Minimum confidence threshold (60%)
     
     # Run FP-Growth algorithm
     print("Memulai perhitungan FP-Growth...")
