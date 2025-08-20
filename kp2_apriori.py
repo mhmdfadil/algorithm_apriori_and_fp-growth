@@ -1,9 +1,9 @@
 # Import required libraries
-import pandas as pd  # For data manipulation and analysis
-import time  # For measuring execution time
-from itertools import combinations  # For generating combinations of items
-from collections import defaultdict  # For efficient dictionary operations
-import os  # For operating system dependent functionality
+import pandas as pd
+import numpy as np
+import time
+from itertools import combinations
+import os
 
 def apriori_algorithm(one_hot_file, min_support=0.3, min_confidence=0.6):
     """
@@ -17,6 +17,8 @@ def apriori_algorithm(one_hot_file, min_support=0.3, min_confidence=0.6):
     Returns:
         dict: Dictionary containing frequent itemsets, association rules and metrics
     """
+    # Start timer to measure execution time
+    start_time = time.time()
     
     # Read the one-hot encoded data
     df = pd.read_excel(one_hot_file, sheet_name='One-Hot')
@@ -26,27 +28,34 @@ def apriori_algorithm(one_hot_file, min_support=0.3, min_confidence=0.6):
     transactions = df[item_columns]
     total_transactions = len(transactions)
     
-    # Start timer to measure execution time
-    start_time = time.time()
+    # Convert to numpy array for faster computation
+    transaction_matrix = transactions.values.astype(bool)
     
-    # Function to calculate support count and support ratio
-    def calculate_support(itemset):
+    
+    
+    # Function to calculate support using numpy for efficiency
+    def calculate_support_numpy(itemset_indices):
         """
-        Calculate support count and support ratio for an itemset
+        Calculate support count and support ratio for an itemset using numpy
         
         Args:
-            itemset (str or tuple): Single item or combination of items
+            itemset_indices (list): List of column indices for the itemset
             
         Returns:
             tuple: (support_count, support_ratio)
         """
-        if isinstance(itemset, str):
-            # For single itemset
-            support_count = transactions[itemset].sum()
+        # Use numpy to calculate support efficiently
+        if len(itemset_indices) == 1:
+            support_count = np.sum(transaction_matrix[:, itemset_indices[0]])
         else:
-            # For itemset combinations
-            support_count = transactions[list(itemset)].all(axis=1).sum()
+            # Use numpy's all() along axis=1 for multiple items
+            support_count = np.sum(np.all(transaction_matrix[:, itemset_indices], axis=1))
+        
         return support_count, support_count / total_transactions
+    
+    # Create mapping between item names and indices
+    item_to_idx = {item: idx for idx, item in enumerate(item_columns)}
+    idx_to_item = {idx: item for idx, item in enumerate(item_columns)}
     
     # Step 1: Find frequent 1-itemsets
     frequent_itemsets = {}  # Dictionary to store frequent itemsets by size
@@ -56,9 +65,10 @@ def apriori_algorithm(one_hot_file, min_support=0.3, min_confidence=0.6):
     # Store detailed results for each frequent itemset level
     frequent_results = {k: []}
     
-    # Calculate support for each individual item
+    # Calculate support for each individual item using numpy
     for item in item_columns:
-        support_count, support = calculate_support(item)
+        idx = item_to_idx[item]
+        support_count, support = calculate_support_numpy([idx])
         status = "Lolos" if support >= min_support else "Tidak Lolos"
         frequent_results[k].append({
             'Itemset': item,
@@ -79,12 +89,27 @@ def apriori_algorithm(one_hot_file, min_support=0.3, min_confidence=0.6):
         frequent_results[k] = []  # Initialize results storage for k-itemsets
         
         # Generate candidate itemsets from previous frequent itemsets
-        previous_items = [item for itemset in frequent_itemsets[k-1].keys() for item in itemset]
-        unique_previous_items = list(set(previous_items))  # Get unique items
-        candidates = list(combinations(unique_previous_items, k))  # Generate combinations
+        candidates = set()
+        prev_itemsets = list(frequent_itemsets[k-1].keys())
+        
+        # Generate candidates by joining frequent (k-1)-itemsets
+        for i in range(len(prev_itemsets)):
+            for j in range(i + 1, len(prev_itemsets)):
+                itemset1 = prev_itemsets[i]
+                itemset2 = prev_itemsets[j]
+                
+                # Join itemsets if they share first k-2 items
+                union_set = itemset1 | itemset2
+                if len(union_set) == k:
+                    candidates.add(frozenset(union_set))
+        
+        candidates = list(candidates)
         
         # Check each candidate itemset
         for candidate in candidates:
+            # Convert candidate to indices for numpy calculation
+            candidate_indices = [item_to_idx[item] for item in candidate]
+            
             # Prune step: Check if all subsets are frequent
             all_subsets_frequent = True
             for subset in combinations(candidate, k-1):
@@ -94,7 +119,7 @@ def apriori_algorithm(one_hot_file, min_support=0.3, min_confidence=0.6):
             
             # Only proceed if all subsets are frequent
             if all_subsets_frequent:
-                support_count, support = calculate_support(candidate)
+                support_count, support = calculate_support_numpy(candidate_indices)
                 status = "Lolos" if support >= min_support else "Tidak Lolos"
                 frequent_results[k].append({
                     'Itemset': ', '.join(candidate),
@@ -104,7 +129,7 @@ def apriori_algorithm(one_hot_file, min_support=0.3, min_confidence=0.6):
                 })
                 # Store only itemsets that meet minimum support
                 if support >= min_support:
-                    frequent_itemsets[k][frozenset(candidate)] = support
+                    frequent_itemsets[k][candidate] = support
         
         # Stop if no frequent itemsets found at this level
         if not frequent_itemsets[k]:
@@ -159,7 +184,7 @@ def apriori_algorithm(one_hot_file, min_support=0.3, min_confidence=0.6):
     
     # Calculate evaluation metrics
     num_rules = len(rules)
-    avg_lift = sum(rule['Lift'] for rule in rules) / num_rules if num_rules > 0 else 0
+    avg_lift = np.mean([rule['Lift'] for rule in rules]) if num_rules > 0 else 0
     
     # Calculate additional metrics for each rule
     for rule in rules:
@@ -171,7 +196,7 @@ def apriori_algorithm(one_hot_file, min_support=0.3, min_confidence=0.6):
         rule['F1-Score'] = round(2 * (precision * recall) / (precision + recall), 4) if (precision + recall) > 0 else 0
 
     # Calculate average accuracy across all rules
-    avg_accuracy = sum(rule['Akurasi'] for rule in rules) / num_rules if num_rules > 0 else 0
+    avg_accuracy = np.mean([rule['Akurasi'] for rule in rules]) if num_rules > 0 else 0
     
     # Return all results in structured format
     return {
@@ -253,7 +278,7 @@ def save_results_to_excel(results, output_file):
                     df_list.append(pd.DataFrame(results['frequent_results'][k]))
                 df_list.append(pd.DataFrame(results['association_rules']))
                 df_list.append(pd.DataFrame.from_dict(results['metrics'], orient='index', columns=['Value']))
-                df = pd.concat(df_list, axis=0)
+                df = pd.concat(df_list, axis=0, ignore_index=True)
             else:
                 continue
             
@@ -265,7 +290,7 @@ def save_results_to_excel(results, output_file):
                     len(str(col))  # Header length
                 )
                 # Set column width (with some padding)
-                worksheet.set_column(idx, idx, max_len + 2)
+                worksheet.set_column(idx, idx, min(max_len + 2, 50))  # Limit max width
 
 if __name__ == "__main__":
     # Set input/output parameters
